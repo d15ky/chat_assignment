@@ -22,7 +22,6 @@ defmodule ChatAssignmentWeb.UserSettingsController do
         |> UserAuth.log_in_user(user)
 
       {:error, changeset} ->
-        IO.inspect changeset
         render(conn, "edit.html", username_changeset: changeset)
     end
   end
