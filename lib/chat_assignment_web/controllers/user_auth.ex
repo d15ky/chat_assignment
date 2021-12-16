@@ -81,7 +81,7 @@ defmodule ChatAssignmentWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: "/")
+    |> redirect(to: log_in_path(conn))
   end
 
   @doc """
@@ -134,12 +134,12 @@ defmodule ChatAssignmentWeb.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> redirect(to: log_in_path(conn))
       |> halt()
     end
   end
 
- @doc """
+  @doc """
   Used for routes that require the user to not be authenticated.
   """
   def redirect_based_on_auth(conn, _opts) do
@@ -149,9 +149,8 @@ defmodule ChatAssignmentWeb.UserAuth do
       |> halt()
     else
       conn
-      |> put_flash(:error, "You must log in to access this page")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> redirect(to: log_in_path(conn))
       |> halt()
     end
   end
@@ -161,6 +160,8 @@ defmodule ChatAssignmentWeb.UserAuth do
   end
 
   defp maybe_store_return_to(conn), do: conn
+
+  defp log_in_path(conn), do: Routes.user_session_path(conn, :new)
 
   defp signed_in_path(conn), do: Routes.chat_index_path(conn, :index)
 end
