@@ -18,7 +18,7 @@ defmodule ChatAssignmentWeb.Router do
   end
 
   scope "/", ChatAssignmentWeb do
-    pipe_through :browser
+    pipe_through [:browser, :redirect_based_on_auth]
 
     get "/", PageController, :index
   end
@@ -26,7 +26,7 @@ defmodule ChatAssignmentWeb.Router do
   ## Chat routes
 
   scope "/", ChatAssignmentWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/chat", ChatLive.Index, :index
   end
