@@ -23,6 +23,14 @@ defmodule ChatAssignmentWeb.Router do
     get "/", PageController, :index
   end
 
+  ## Chat routes
+
+  scope "/", ChatAssignmentWeb do
+    pipe_through :browser
+
+    live "/chat", ChatLive.Index, :index
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ChatAssignmentWeb do
   #   pipe_through :api
