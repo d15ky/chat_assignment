@@ -1,19 +1,17 @@
 # ChatAssignment
 
-To start your Phoenix server:
+## Workplan
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+1. Add user authentication system via phx.gen.auth
+- Modify to add username (model, view, controller, changeset)
+- Modify to prevent logging in before email is confirmed
+- Modify to allow logging in by email or username
+- Optionally add ability to change username
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+2. Add chat liveview
+- Add message model (with relation to user)
+- Create live chat window and submit field
+- Get messages from DB to show in chat window
+- Use PubSub to receive, save, and display new messages
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+3. Add Presence module to show active users
