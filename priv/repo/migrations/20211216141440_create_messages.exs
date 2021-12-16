@@ -4,7 +4,7 @@ defmodule ChatAssignment.Repo.Migrations.CreateMessages do
   def change do
     create table(:messages) do
       add :content, :text
-      add :user_id, references(:users, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :nilify_all)
 
       timestamps()
     end
