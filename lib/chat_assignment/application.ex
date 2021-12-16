@@ -14,6 +14,8 @@ defmodule ChatAssignment.Application do
       ChatAssignmentWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: ChatAssignment.PubSub},
+      # Start the Presence system
+      ChatAssignmentWeb.ChatPresence,
       # Start the Endpoint (http/https)
       ChatAssignmentWeb.Endpoint
       # Start a worker by calling: ChatAssignment.Worker.start_link(arg)
