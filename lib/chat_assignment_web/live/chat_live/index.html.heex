@@ -19,6 +19,22 @@
         </table>
     </div>
 </div>
+<div id="users-container">
+    <table>
+        <tr>
+        <th>
+        Online users
+        </th>
+        </tr>
+        <%= for user <- @online_users do %>
+        <tr>
+        <td>
+        @<%= user.username %>
+        </td>
+        </tr>
+        <% end %>
+    </table>
+</div>
 <.form let={f} for={@message_changeset} phx-submit="new_message" style="display: flex">
 <%= text_input f, :content %>
 <div>

@@ -29,6 +29,7 @@ defmodule ChatAssignmentWeb.ChatLive.Index do
 
     {:ok,
      socket
+     |> assign(online_users: get_online_users())
      |> assign(messages: last_messages)
      |> assign(message_changeset: message_changeset)
      |> assign(user: user)}
@@ -40,6 +41,7 @@ defmodule ChatAssignmentWeb.ChatLive.Index do
       message
       |> Map.put("user_id", socket.assigns.user.id)
       |> Chat.create_message()
+
     message_data = %{message_data | user: socket.assigns.user}
 
     Endpoint.broadcast(@pubsub_topic, "new_message", message_data)
@@ -58,8 +60,21 @@ defmodule ChatAssignmentWeb.ChatLive.Index do
 
   @impl true
   def handle_info(%{event: "presence_diff", payload: _}, socket) do
-
     {:noreply,
-     socket}
+     socket
+     |> assign(online_users: get_online_users())}
+  end
+
+  defp get_online_users() do
+    @pubsub_topic
+    |> ChatPresence.list()
+    |> Map.keys()
+    |> tokens_to_users
+  end
+
+  defp tokens_to_users(tokens) do
+    Enum.map(tokens, fn token ->
+      get_user_by_session_token(token)
+    end)
   end
 end
