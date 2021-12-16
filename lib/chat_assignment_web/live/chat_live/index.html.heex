@@ -1,1 +1,27 @@
-<h1>hello world</h1>
+<div id="chat-with-message">
+    <div id="chat-container">
+        <table>
+        <%= for message <- Enum.reverse(@messages) do %>
+        <tr>
+            <td id={"message-#{message.id}"}>
+            <b>
+            <%= message.inserted_at %>
+            </b>
+            <%= if message.user do %>
+            @<%= message.user.username %>:
+            <% else %>
+            <i>(DELETED USER)</i>:
+            <% end %>
+            <%= message.content %>
+            </td>
+        </tr>
+        <% end %>
+        </table>
+    </div>
+</div>
+<.form let={f} for={@message_changeset} phx-submit="new_message" style="display: flex">
+<%= text_input f, :content %>
+<div>
+  <%= submit ">" %>
+</div>
+</.form>
