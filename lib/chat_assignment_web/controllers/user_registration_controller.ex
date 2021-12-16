@@ -3,7 +3,6 @@ defmodule ChatAssignmentWeb.UserRegistrationController do
 
   alias ChatAssignment.Accounts
   alias ChatAssignment.Accounts.User
-  alias ChatAssignmentWeb.UserAuth
 
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
