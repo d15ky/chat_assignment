@@ -1,6 +1,8 @@
 defmodule ChatAssignmentWeb.UserSessionController do
   use ChatAssignmentWeb, :controller
 
+  import Phoenix.HTML.Link, only: [link: 2]
+
   alias ChatAssignment.Accounts
   alias ChatAssignmentWeb.UserAuth
 
@@ -9,14 +11,21 @@ defmodule ChatAssignmentWeb.UserSessionController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    %{"email" => email, "password" => password} = user_params
+    %{"login" => login, "password" => password} = user_params
 
-    case Accounts.get_user_by_email_and_password(email, password) do
-      nil -> render(conn, "new.html", error_message: "Invalid login (username or email) or password")
+    case Accounts.get_user_by_login_and_password(login, password) do
+      nil ->render_with_error(conn, "Invalid login (username or email) or password")
       user when user.confirmed_at != nil -> UserAuth.log_in_user(conn, user, user_params)
-      user when user.confirmed_at == nil -> render(conn, "new.html", error_message: "You need to confirm your email before you'll be able to login.")
+      user when user.confirmed_at == nil -> render_with_error(conn,
+      ["You need to ", link("confirm your email", to: Routes.user_confirmation_path(conn, :new)), " before you'll be able to login."])
     end
 
+  end
+
+  defp render_with_error(conn, message) do
+    conn
+    |> put_flash(:error, message)
+    |> render("new.html")
   end
 
   def delete(conn, _params) do
