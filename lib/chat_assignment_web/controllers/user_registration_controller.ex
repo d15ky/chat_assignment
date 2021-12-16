@@ -20,8 +20,9 @@ defmodule ChatAssignmentWeb.UserRegistrationController do
           )
 
         conn
-        |> put_flash(:info, "User created successfully.")
-        |> UserAuth.log_in_user(user)
+        |> put_flash(:info, "User created successfully. You have to confirm email before you will be able to login.")
+        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> halt()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
