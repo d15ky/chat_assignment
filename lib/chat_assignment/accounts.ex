@@ -99,6 +99,34 @@ defmodule ChatAssignment.Accounts do
   ## Settings
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user username.
+
+  """
+  def change_user_username(user, attrs \\ %{}) do
+    User.username_changeset(user, attrs)
+  end
+
+  @doc """
+  Updates the user username.
+
+  """
+  def update_user_username(user, password, attrs) do
+    changeset =
+      user
+      |> User.username_changeset(attrs)
+      |> User.validate_current_password(password)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:user, changeset)
+    |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, :all))
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user: user}} -> {:ok, user}
+      {:error, :user, changeset, _} -> {:error, changeset}
+    end
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for changing the user email.
 
   ## Examples
@@ -110,6 +138,7 @@ defmodule ChatAssignment.Accounts do
   def change_user_email(user, attrs \\ %{}) do
     User.email_changeset(user, attrs)
   end
+
 
   @doc """
   Emulates that the email will change without actually changing
@@ -130,6 +159,7 @@ defmodule ChatAssignment.Accounts do
     |> User.validate_current_password(password)
     |> Ecto.Changeset.apply_action(:update)
   end
+
 
   @doc """
   Updates the user email using the given token.
