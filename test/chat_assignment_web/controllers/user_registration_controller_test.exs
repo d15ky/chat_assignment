@@ -2,6 +2,7 @@ defmodule ChatAssignmentWeb.UserRegistrationControllerTest do
   use ChatAssignmentWeb.ConnCase, async: true
 
   import ChatAssignment.AccountsFixtures
+  alias ChatAssignment.Accounts
 
   describe "GET /users/register" do
     test "renders registration page", %{conn: conn} do
@@ -14,7 +15,7 @@ defmodule ChatAssignmentWeb.UserRegistrationControllerTest do
 
     test "redirects if already logged in", %{conn: conn} do
       conn = conn |> log_in_user(user_fixture()) |> get(Routes.user_registration_path(conn, :new))
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/chat"
     end
   end
 
@@ -23,16 +24,29 @@ defmodule ChatAssignmentWeb.UserRegistrationControllerTest do
     test "creates account and logs the user in", %{conn: conn} do
       email = unique_user_email()
 
-      conn =
-        post(conn, Routes.user_registration_path(conn, :create), %{
-          "user" => valid_user_attributes(email: email)
-        })
+      conn = post(conn, Routes.user_registration_path(conn, :create), %{
+        "user" => valid_user_attributes(email: email)
+      })
+      assert redirected_to(conn) == "/users/log_in"
+
+      user = Accounts.get_user_by_email(email)
+
+      token =
+        extract_user_token(fn url ->
+          Accounts.deliver_user_confirmation_instructions(user, url)
+        end)
+
+      {:ok, _user} = Accounts.confirm_user(token)
+
+      conn = post(conn, Routes.user_session_path(conn, :new), %{
+        "user" => %{"login" => email, "password" => valid_user_password()}
+      })
 
       assert get_session(conn, :user_token)
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/chat"
 
       # Now do a logged in request and assert on the menu
-      conn = get(conn, "/")
+      conn = get(conn, "/chat")
       response = html_response(conn, 200)
       assert response =~ email
       assert response =~ "Settings</a>"

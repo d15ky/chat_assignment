@@ -28,11 +28,13 @@
         </th>
         </tr>
         <%= for user <- @online_users do %>
-        <tr>
-        <td>
-        @<%= user.username %>
-        </td>
-        </tr>
+            <%= if user != nil do %>
+            <tr>
+            <td>
+            @<%= user.username %>
+            </td>
+            </tr>
+            <% end %>
         <% end %>
     </table>
 </div>

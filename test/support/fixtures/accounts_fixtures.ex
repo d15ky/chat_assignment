@@ -5,12 +5,15 @@ defmodule ChatAssignment.AccountsFixtures do
   """
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
+
+  def unique_username, do: String.slice("user#{System.unique_integer([:positive])}", 0..30)
   def valid_user_password, do: "hello world!"
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
-      password: valid_user_password()
+      password: valid_user_password(),
+      username: unique_username()
     })
   end
 
