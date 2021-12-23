@@ -39,7 +39,7 @@
     </table>
 </div>
 </div>
-<.form let={f} for={@message_changeset} phx-submit="new_message" style="display: flex">
+<.form let={f} for={@message_changeset} id="message-form" phx-submit="new_message" style="display: flex">
 <%= text_input f, :content %>
 <div>
   <%= submit ">" %>
