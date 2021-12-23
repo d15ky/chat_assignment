@@ -65,6 +65,10 @@ defmodule ChatAssignmentWeb.ChatLive.Index do
      |> assign(online_users: get_online_users())}
   end
 
+  def get_topic() do
+    @pubsub_topic
+  end
+
   defp get_online_users() do
     @pubsub_topic
     |> ChatPresence.list()
