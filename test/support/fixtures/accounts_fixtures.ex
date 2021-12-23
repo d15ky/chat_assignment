@@ -3,6 +3,7 @@ defmodule ChatAssignment.AccountsFixtures do
   This module defines test helpers for creating
   entities via the `ChatAssignment.Accounts` context.
   """
+  alias ChatAssignment.Accounts
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
 
@@ -21,9 +22,22 @@ defmodule ChatAssignment.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> ChatAssignment.Accounts.register_user()
+      |> Accounts.register_user()
 
     user
+  end
+
+  def confirmed_user_fixture(attrs \\ %{}) do
+    user = user_fixture(attrs)
+
+    token =
+      extract_user_token(fn url ->
+        Accounts.deliver_user_confirmation_instructions(user, url)
+      end)
+
+    {:ok, confirmed_user} = Accounts.confirm_user(token)
+
+    confirmed_user
   end
 
   def extract_user_token(fun) do

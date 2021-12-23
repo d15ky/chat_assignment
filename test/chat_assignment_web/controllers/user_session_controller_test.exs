@@ -5,15 +5,7 @@ defmodule ChatAssignmentWeb.UserSessionControllerTest do
   alias ChatAssignment.Accounts
 
   setup do
-    user = user_fixture()
-    token =
-      extract_user_token(fn url ->
-        Accounts.deliver_user_confirmation_instructions(user, url)
-      end)
-
-    {:ok, confirmed_user} = Accounts.confirm_user(token)
-
-    %{user: confirmed_user}
+    %{user: confirmed_user_fixture()}
   end
 
   describe "GET /users/log_in" do
