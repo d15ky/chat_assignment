@@ -36,15 +36,12 @@ defmodule ChatAssignmentWeb.ChatLive.Index do
   end
 
   @impl true
-  def handle_event("new_message", %{"message" => message}, socket) do
-    {:ok, message_data} =
-      message
-      |> Map.put("user_id", socket.assigns.user.id)
-      |> Chat.create_message()
+  def handle_event("new_message", %{"message" => message_attrs}, socket) do
+    {:ok, message} = Chat.create_message(%Message{user_id: socket.assigns.user.id}, message_attrs)
 
-    message_data = %{message_data | user: socket.assigns.user}
+    message = %{message | user: socket.assigns.user}
 
-    Endpoint.broadcast(@pubsub_topic, "new_message", message_data)
+    Endpoint.broadcast(@pubsub_topic, "new_message", message)
 
     {:noreply, socket}
   end

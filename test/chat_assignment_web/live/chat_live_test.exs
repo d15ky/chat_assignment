@@ -39,7 +39,7 @@ defmodule ChatAssignmentWeb.ChatLiveTest do
       {:ok, view, _html} = live(conn, @chat_path)
 
       {:ok, message_data} =
-        ChatAssignment.Chat.create_message(Map.put(@valid_message_attrs, :user_id, user.id))
+        ChatAssignment.Chat.create_message(%Message{user_id: user.id}, @valid_message_attrs)
 
       refute render_element(view, "#chat-container") =~ "#{@valid_message_attrs.content}"
 
@@ -103,7 +103,6 @@ defmodule ChatAssignmentWeb.ChatLiveTest do
 
       assert render_element(view, "#chat-container") =~ "#{@valid_message_attrs.content}"
       assert render_element(view2, "#chat-container") =~ "#{@valid_message_attrs.content}"
-
     end
 
     defp new_user() do

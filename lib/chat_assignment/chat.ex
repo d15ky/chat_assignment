@@ -13,8 +13,8 @@ defmodule ChatAssignment.Chat do
     Message.changeset(message, attrs)
   end
 
-  def create_message(attrs \\ %{}) do
-    %Message{}
+  def create_message(msg \\ %Message{}, attrs \\ %{}) do
+    msg
     |> Message.changeset(attrs)
     |> Repo.insert()
   end

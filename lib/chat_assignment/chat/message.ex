@@ -12,7 +12,7 @@ defmodule ChatAssignment.Chat.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:content, :user_id])
+    |> cast(attrs, [:content])
     |> validate_required([:content, :user_id])
     |> cast_assoc(:user)
     |> assoc_constraint(:user)
