@@ -2,7 +2,6 @@ defmodule ChatAssignmentWeb.UserSessionControllerTest do
   use ChatAssignmentWeb.ConnCase, async: true
 
   import ChatAssignment.AccountsFixtures
-  alias ChatAssignment.Accounts
 
   setup do
     %{user: confirmed_user_fixture()}
